@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - FashionNova</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .product-gallery {
+            position: sticky;
+            top: 20px;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            cursor: zoom-in;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .thumbnail.active {
+            border-color: var(--primary-color);
+        }
+        
+        .thumbnail:hover {
+            transform: scale(1.05);
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .product-brand {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .rating-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stars {
+            color: #ffc107;
+        }
+        
+        .rating-count {
+            color: #6c757d;
+        }
+        
+        .price-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .current-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .original-price {
+            font-size: 1.5rem;
+            text-decoration: line-through;
+            color: #6c757d;
+            margin-left: 10px;
+        }
+        
+        .discount-badge {
+            background: #ff4757;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 15px;
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #dee2e6;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quantity-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .quantity-input {
+            width: 80px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 8px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .btn-cart {
+            flex: 2;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-wishlist {
+            width: 60px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            color: #6c757d;
+            transition: all 0.3s;
+        }
+        
+        .btn-wishlist.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-wishlist:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .product-details {
+            margin-top: 40px;
+        }
+        
+        .details-tabs {
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 30px;
+        }
+        
+        .tab-link {
+            padding: 15px 30px;
+            border: none;
+            background: none;
+            font-weight: 600;
+            color: #6c757d;
+            position: relative;
+        }
+        
+        .tab-link.active {
+            color: var(--primary-color);
+        }
+        
+        .tab-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .review-card {
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .reviewer-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .review-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .review-form {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+        
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .star-rating input {
+            display: none;
+        }
+        
+        .star-rating label {
+            color: #dee2e6;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffc107;
+        }
+        
+        .seller-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .seller-rating {
+            color: #ffc107;
+        }
+        
+        .modal-image {
+            width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+        
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-image {
+                height: 300px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn-wishlist {
+                width: 100%;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (Simplified) -->
+    <nav class="navbar navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-tshirt"></i> FashionNova
+            </a>
+            <div class="d-flex gap-3">
+                <a href="/cart/" class="btn btn-outline-primary position-relative">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge bg-primary badge-count" id="cartCount">0</span>
+                </a>
+                <a href="/wishlist/" class="btn btn-outline-danger position-relative">
+                    <i class="fas fa-heart"></i>
+                    <span class="badge bg-danger badge-count" id="wishlistCount">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/products/">Products</a></li>
+                <li class="breadcrumb-item active" id="productCategory"></li>
+            </ol>
+        </nav>
+        
+        <div class="row">
+            <!-- Product Gallery -->
+            <div class="col-lg-6">
+                <div class="product-gallery">
+                    <img id="mainImage" src="" class="main-image" alt="Product Image" data-bs-toggle="modal" data-bs-target="#imageModal">
+                    
+                    <div class="thumbnail-container" id="thumbnails">
+                        <!-- Thumbnails will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Information -->
+            <div class="col-lg-6">
+                <div class="product-info">
+                    <h1 class="product-title" id="productTitle"></h1>
+                    <div class="product-brand" id="productBrand"></div>
+                    
+                    <div class="rating-container">
+                        <div class="stars" id="productRating"></div>
+                        <span class="rating-count" id="reviewCount">(0 reviews)</span>
+                        <span class="badge bg-success ms-3" id="productStatus"></span>
+                    </div>
+                    
+                    <div class="price-container">
+                        <div class="d-flex align-items-center">
+                            <span class="current-price" id="currentPrice"></span>
+                            <span class="original-price" id="originalPrice"></span>
+                            <span class="discount-badge" id="discountBadge"></span>
+                        </div>
+                        <p class="text-success mb-0" id="stockStatus"></p>
+                    </div>
+                    
+                    <p class="product-description" id="productDescription"></p>
+                    
+                    <!-- Seller Info -->
+                    <div class="seller-info">
+                        <h6><i class="fas fa-store me-2"></i>Sold By</h6>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <div>
+                                <h5 class="mb-1" id="sellerName"></h5>
+                                <div class="seller-rating" id="sellerRating"></div>
+                                <small class="text-muted" id="sellerSales"></small>
+                            </div>
+                            <button class="btn btn-outline-primary" onclick="viewSeller()">View Store</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quantity Selector -->
+                    <div class="quantity-selector">
+                        <span>Quantity:</span>
+                        <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                        <input type="number" class="quantity-input" id="quantity" value="1" min="1" max="100">
+                        <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="btn btn-cart" id="addToCartBtn">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                        <button class="btn btn-wishlist" id="wishlistBtn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Product Details -->
+                    <div class="product-details">
+                        <div class="details-tabs">
+                            <button class="tab-link active" onclick="showTab('description')">Description</button>
+                            <button class="tab-link" onclick="showTab('specifications')">Specifications</button>
+                            <button class="tab-link" onclick="showTab('reviews')">Reviews</button>
+                            <button class="tab-link" onclick="showTab('shipping')">Shipping & Returns</button>
+                        </div>
+                        
+                        <div id="descriptionTab" class="tab-content active">
+                            <p id="fullDescription"></p>
+                        </div>
+                        
+                        <div id="specificationsTab" class="tab-content">
+                            <table class="table">
+                                <tbody id="specificationsTable">
+                                    <!-- Specifications will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div id="reviewsTab" class="tab-content">
+                            <div id="reviewsContainer">
+                                <!-- Reviews will be loaded here -->
+                            </div>
+                            
+                            <!-- Add Review Form -->
+                            <div class="review-form" id="reviewFormContainer">
+                                <h5>Add Your Review</h5>
+                                <form id="reviewForm">
+                                    <div class="star-rating">
+                                        <input type="radio" id="star5" name="rating" value="5">
+                                        <label for="star5"><i class="fas fa-star"></i></label>
+                                        <input type="radio" id="star4" name="rating" value="4">
+                                        <label for="star4"><i class="fas fa-star"></i></label>
+                                        <input type="radio" id="star3" name="rating" value="3">
+                                        <label for="star3"><i class="fas fa-star"></i></label>
+                                        <input type="radio" id="star2" name="rating" value="2">
+                                        <label for="star2"><i class="fas fa-star"></i></label>
+                                        <input type="radio" id="star1" name="rating" value="1">
+                                        <label for="star1"><i class="fas fa-star"></i></label>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="reviewText" class="form-label">Your Review</label>
+                                        <textarea class="form-control" id="reviewText" rows="4" required></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div id="shippingTab" class="tab-content">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-shipping-fast me-2"></i>Shipping</h6>
+                                    <ul>
+                                        <li>Free shipping on orders over $50</li>
+                                        <li>Standard delivery: 3-5 business days</li>
+                                        <li>Express delivery: 1-2 business days</li>
+                                        <li>International shipping available</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><i class="fas fa-undo me-2"></i>Returns</h6>
+                                    <ul>
+                                        <li>30-day return policy</li>
+                                        <li>Items must be unworn and in original packaging</li>
+                                        <li>Free returns for defective items</li>
+                                        <li>Refund processed within 7 business days</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Related Products -->
+        <section class="mt-5">
+            <h3 class="mb-4">You May Also Like</h3>
+            <div class="row g-4" id="relatedProducts">
+                <!-- Related products will be loaded here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" class="modal-image" src="" alt="Product Image">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:8000/api';
+        const PRODUCT_ID = new URLSearchParams(window.location.search).get('id') || 
+                          window.location.pathname.split('/').pop();
+        
+        let authToken = localStorage.getItem('authToken');
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        let currentProduct = null;
+        let currentImages = [];
+        let currentImageIndex = 0;
+        let quantity = 1;
+
+        // Utility Functions
+        function getAuthHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            };
+        }
+
+        async function apiRequest(endpoint, options = {}) {
+            const url = `${API_BASE_URL}${endpoint}`;
+            const headers = authToken ? getAuthHeaders() : { 'Content-Type': 'application/json' };
+            
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: { ...headers, ...options.headers }
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '/login/';
+                    return null;
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                return null;
+            }
+        }
+
+        async function loadProduct() {
+            try {
+                const product = await apiRequest(`/products/${PRODUCT_ID}/`);
+                if (!product) {
+                    window.location.href = '/products/';
+                    return;
+                }
+                
+                currentProduct = product;
+                currentImages = product.images || [];
+                
+                // Update page title
+                document.title = `${product.name} - FashionNova`;
+                
+                // Load product data
+                displayProductData();
+                loadRelatedProducts(product.category);
+                loadReviews();
+                checkWishlistStatus();
+                updateHeaderCounts();
+            } catch (error) {
+                console.error('Error loading product:', error);
+                showToast('Error loading product', 'danger');
+            }
+        }
+
+        function displayProductData() {
+            // Basic info
+            document.getElementById('productTitle').textContent = currentProduct.name;
+            document.getElementById('productCategory').textContent = currentProduct.category?.name || 'Category';
+            document.getElementById('productBrand').textContent = currentProduct.brand?.name || 'No Brand';
+            document.getElementById('productDescription').textContent = currentProduct.description.substring(0, 200) + '...';
+            document.getElementById('fullDescription').textContent = currentProduct.description;
+            
+            // Price
+            const currentPrice = currentProduct.discount_price || currentProduct.price;
+            const originalPrice = currentProduct.discount_price ? currentProduct.price : null;
+            
+            document.getElementById('currentPrice').textContent = `KSh ${currentPrice}`;
+            
+            if (originalPrice) {
+                document.getElementById('originalPrice').textContent = `KSh ${originalPrice}`;
+                document.getElementById('originalPrice').style.display = 'inline';
+                document.getElementById('discountBadge').textContent = 
+                    `-${Math.round(((originalPrice - currentPrice) / originalPrice) * 100)}% OFF`;
+            } else {
+                document.getElementById('originalPrice').style.display = 'none';
+                document.getElementById('discountBadge').style.display = 'none';
+            }
+            
+            // Rating
+            const rating = currentProduct.average_rating || 0;
+            document.getElementById('productRating').innerHTML = generateStarRating(rating);
+            
+            // Stock status
+            if (currentProduct.stock_quantity > 0) {
+                document.getElementById('productStatus').textContent = 'In Stock';
+                document.getElementById('productStatus').className = 'badge bg-success';
+                document.getElementById('stockStatus').textContent = 
+                    `${currentProduct.stock_quantity} items available`;
+            } else {
+                document.getElementById('productStatus').textContent = 'Out of Stock';
+                document.getElementById('productStatus').className = 'badge bg-danger';
+                document.getElementById('stockStatus').textContent = 'Currently unavailable';
+                document.getElementById('addToCartBtn').disabled = true;
+                document.getElementById('addToCartBtn').textContent = 'Out of Stock';
+            }
+            
+            // Seller info
+            document.getElementById('sellerName').textContent = currentProduct.seller_name || 'Seller';
+            document.getElementById('sellerRating').innerHTML = generateStarRating(currentProduct.seller?.rating || 0);
+            document.getElementById('sellerSales').textContent = 
+                `${currentProduct.seller?.total_sales || 0} sales`;
+            
+            // Load images
+            loadProductImages();
+            
+            // Specifications
+            const specsTable = document.getElementById('specificationsTable');
+            specsTable.innerHTML = `
+                <tr><th>Gender</th><td>${getGenderText(currentProduct.gender)}</td></tr>
+                <tr><th>Brand</th><td>${currentProduct.brand?.name || 'N/A'}</td></tr>
+                <tr><th>Category</th><td>${currentProduct.category?.name || 'N/A'}</td></tr>
+                <tr><th>SKU</th><td>${currentProduct.sku}</td></tr>
+                <tr><th>Material</th><td>100% Cotton</td></tr>
+                <tr><th>Wash Care</th><td>Machine wash cold, tumble dry low</td></tr>
+            `;
+        }
+
+        function getGenderText(genderCode) {
+            const genders = {
+                'M': 'Men',
+                'F': 'Women',
+                'U': 'Unisex',
+                'K': 'Kids'
+            };
+            return genders[genderCode] || 'Unisex';
+        }
+
+        function generateStarRating(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    stars += '<i class="fas fa-star"></i>';
+                } else if (i === fullStars + 1 && hasHalfStar) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                } else {
+                    stars += '<i class="far fa-star"></i>';
+                }
+            }
+            return stars + ` <small>(${rating.toFixed(1)})</small>`;
+        }
+
+        function loadProductImages() {
+            const mainImage = document.getElementById('mainImage');
+            const thumbnails = document.getElementById('thumbnails');
+            
+            if (currentImages.length > 0) {
+                // Set main image
+                mainImage.src = currentImages[0].image;
+                mainImage.style.display = 'block';
+                
+                // Create thumbnails
+                thumbnails.innerHTML = '';
+                currentImages.forEach((image, index) => {
+                    const thumbnail = document.createElement('img');
+                    thumbnail.src = image.image;
+                    thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+                    thumbnail.alt = `Thumbnail ${index + 1}`;
+                    
+                    thumbnail.addEventListener('click', () => {
+                        // Update main image
+                        mainImage.src = image.image;
+                        document.getElementById('modalImage').src = image.image;
+                        
+                        // Update active thumbnail
+                        document.querySelectorAll('.thumbnail').forEach(thumb => {
+                            thumb.classList.remove('active');
+                        });
+                        thumbnail.classList.add('active');
+                        currentImageIndex = index;
+                    });
+                    
+                    thumbnails.appendChild(thumbnail);
+                });
+            } else {
+                // No images available
+                mainImage.src = 'https://via.placeholder.com/600x500/eee/ccc?text=No+Image+Available';
+                mainImage.style.display = 'block';
+            }
+        }
+
+        async function loadRelatedProducts(categoryId) {
+            try {
+                const products = await apiRequest(`/products/?category=${categoryId}&limit=4`);
+                const container = document.getElementById('relatedProducts');
+                
+                if (products && products.results) {
+                    container.innerHTML = '';
+                    
+                    products.results.forEach(product => {
+                        if (product.id === currentProduct.id) return;
+                        
+                        const col = document.createElement('div');
+                        col.className = 'col-lg-3 col-md-6';
+                        col.innerHTML = `
+                            <div class="card h-100" onclick="window.location.href='/product/${product.id}/'">
+                                <img src="${product.images?.[0]?.image || ''}" 
+                                     class="card-img-top" 
+                                     alt="${product.name}"
+                                     style="height: 200px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h6 class="card-title">${product.name}</h6>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="h5 mb-0">KSh ${product.discount_price || product.price}</span>
+                                        ${product.discount_price ? 
+                                            `<small class="text-muted text-decoration-line-through">KSh ${product.price}</small>` : ''
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(col);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading related products:', error);
+            }
+        }
+
+        async function loadReviews() {
+            try {
+                const reviews = await apiRequest(`/products/${PRODUCT_ID}/reviews/`);
+                const container = document.getElementById('reviewsContainer');
+                
+                if (reviews && reviews.length > 0) {
+                    // Update review count
+                    document.getElementById('reviewCount').textContent = `(${reviews.length} reviews)`;
+                    
+                    // Display reviews
+                    container.innerHTML = '';
+                    reviews.forEach(review => {
+                        const reviewCard = document.createElement('div');
+                        reviewCard.className = 'review-card';
+                        reviewCard.innerHTML = `
+                            <div class="review-header">
+                                <div>
+                                    <div class="reviewer-name">${review.customer_name}</div>
+                                    <div class="review-date">${new Date(review.created_at).toLocaleDateString()}</div>
+                                </div>
+                                <div class="stars">
+                                    ${generateStarRating(review.rating)}
+                                </div>
+                            </div>
+                            <p>${review.review}</p>
+                        `;
+                        container.appendChild(reviewCard);
+                    });
+                } else {
+                    container.innerHTML = '<p class="text-muted">No reviews yet. Be the first to review!</p>';
+                }
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+            }
+        }
+
+        async function checkWishlistStatus() {
+            if (!authToken) return;
+            
+            try {
+                const wishlist = await apiRequest('/wishlist/');
+                const isInWishlist = wishlist?.some(item => item.product === currentProduct.id);
+                
+                const wishlistBtn = document.getElementById('wishlistBtn');
+                const icon = wishlistBtn.querySelector('i');
+                
+                if (isInWishlist) {
+                    wishlistBtn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                } else {
+                    wishlistBtn.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                }
+            } catch (error) {
+                console.error('Error checking wishlist:', error);
+            }
+        }
+
+        async function updateHeaderCounts() {
+            if (!authToken) return;
+            
+            try {
+                const cartResponse = await apiRequest('/cart/my_cart/');
+                const wishlistResponse = await apiRequest('/wishlist/');
+                
+                if (cartResponse && cartResponse.items) {
+                    document.getElementById('cartCount').textContent = cartResponse.items.length;
+                }
+                
+                if (wishlistResponse) {
+                    document.getElementById('wishlistCount').textContent = wishlistResponse.length;
+                }
+            } catch (error) {
+                console.error('Error updating counts:', error);
+            }
+        }
+
+        function increaseQuantity() {
+            const maxStock = currentProduct.stock_quantity;
+            if (quantity < maxStock) {
+                quantity++;
+                document.getElementById('quantity').value = quantity;
+            }
+        }
+
+        function decreaseQuantity() {
+            if (quantity > 1) {
+                quantity--;
+                document.getElementById('quantity').value = quantity;
+            }
+        }
+
+        async function addToCart() {
+            if (!authToken) {
+                window.location.href = '/login/';
+                return;
+            }
+            
+            try {
+                await apiRequest('/cart/add_item/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        product: currentProduct.id,
+                        quantity: quantity
+                    })
+                });
+                
+                showToast('Added to cart successfully');
+                updateHeaderCounts();
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                showToast('Error adding to cart', 'danger');
+            }
+        }
+
+        async function toggleWishlist() {
+            if (!authToken) {
+                window.location.href = '/login/';
+                return;
+            }
+            
+            const wishlistBtn = document.getElementById('wishlistBtn');
+            const icon = wishlistBtn.querySelector('i');
+            
+            try {
+                const wishlist = await apiRequest('/wishlist/');
+                const existingItem = wishlist?.find(item => item.product === currentProduct.id);
+                
+                if (existingItem) {
+                    // Remove from wishlist
+                    await apiRequest(`/wishlist/${existingItem.id}/`, { method: 'DELETE' });
+                    wishlistBtn.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                    showToast('Removed from wishlist');
+                } else {
+                    // Add to wishlist
+                    await apiRequest('/wishlist/', {
+                        method: 'POST',
+                        body: JSON.stringify({ product: currentProduct.id })
+                    });
+                    wishlistBtn.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                    showToast('Added to wishlist');
+                }
+                
+                updateHeaderCounts();
+            } catch (error) {
+                console.error('Error toggling wishlist:', error);
+                showToast('Error updating wishlist', 'danger');
+            }
+        }
+
+        function showTab(tabName) {
+            // Update active tab
+            document.querySelectorAll('.tab-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show corresponding content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+        }
+
+        async function submitReview(event) {
+            event.preventDefault();
+            
+            if (!authToken) {
+                window.location.href = '/login/';
+                return;
+            }
+            
+            const rating = document.querySelector('input[name="rating"]:checked');
+            const reviewText = document.getElementById('reviewText').value;
+            
+            if (!rating) {
+                showToast('Please select a rating', 'warning');
+                return;
+            }
+            
+            if (!reviewText.trim()) {
+                showToast('Please write a review', 'warning');
+                return;
+            }
+            
+            try {
+                await apiRequest('/reviews/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        product: currentProduct.id,
+                        rating: rating.value,
+                        review: reviewText
+                    })
+                });
+                
+                showToast('Review submitted successfully');
+                document.getElementById('reviewForm').reset();
+                loadReviews();
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                showToast('Error submitting review', 'danger');
+            }
+        }
+
+        function viewSeller() {
+            if (currentProduct.seller) {
+                window.location.href = `/seller/${currentProduct.seller}/`;
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.querySelector('.toast-container');
+            const toastId = 'toast-' + Date.now();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+            toast.setAttribute('id', toastId);
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${type === 'success' ? '<i class="fas fa-check-circle me-2"></i>' : '<i class="fas fa-exclamation-circle me-2"></i>'}
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!PRODUCT_ID || isNaN(PRODUCT_ID)) {
+                window.location.href = '/products/';
+                return;
+            }
+            
+            // Check if user is logged in
+            if (!authToken) {
+                // Hide review form
+                document.getElementById('reviewFormContainer').style.display = 'none';
+            }
+            
+            // Load product
+            loadProduct();
+            
+            // Setup event listeners
+            document.getElementById('quantity').addEventListener('input', function(e) {
+                const maxStock = currentProduct.stock_quantity;
+                let value = parseInt(e.target.value);
+                
+                if (isNaN(value) || value < 1) value = 1;
+                if (value > maxStock) value = maxStock;
+                
+                quantity = value;
+                e.target.value = value;
+            });
+            
+            document.getElementById('addToCartBtn').addEventListener('click', addToCart);
+            document.getElementById('wishlistBtn').addEventListener('click', toggleWishlist);
+            document.getElementById('reviewForm').addEventListener('submit', submitReview);
+            
+            // Setup image modal
+            document.getElementById('mainImage').addEventListener('click', function() {
+                document.getElementById('modalImage').src = this.src;
+            });
+            
+            // Handle keyboard navigation for images
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    // Previous image
+                    currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+                    document.getElementById('mainImage').src = currentImages[currentImageIndex].image;
+                    updateActiveThumbnail();
+                } else if (e.key === 'ArrowRight') {
+                    // Next image
+                    currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+                    document.getElementById('mainImage').src = currentImages[currentImageIndex].image;
+                    updateActiveThumbnail();
+                }
+            });
+        });
+
+        function updateActiveThumbnail() {
+            document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+                thumb.classList.toggle('active', index === currentImageIndex);
+            });
+        }
+    </script>
+</body>
+</html>
