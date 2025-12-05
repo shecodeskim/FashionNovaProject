@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FashionNova - Login/Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+        }
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .auth-left {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .auth-right {
+            padding: 60px 40px;
+        }
+        .form-toggle {
+            margin-bottom: 30px;
+        }
+        .form-toggle .btn {
+            border-radius: 25px;
+            padding: 10px 30px;
+            font-weight: 600;
+        }
+        .auth-form {
+            display: none;
+        }
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e1e1e1;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-auth {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .user-type-select {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .user-type-select input {
+            display: none;
+        }
+        .user-type-select label {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .user-type-select input:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <div class="auth-container">
+                    <div class="row g-0">
+                        <div class="col-md-5 d-none d-md-block">
+                            <div class="auth-left">
+                                <h1 class="mb-4">Welcome to FashionNova</h1>
+                                <p class="mb-4">Discover the latest fashion trends. Join thousands of happy customers shopping with us.</p>
+                                <div class="features">
+                                    <p><i class="fas fa-check-circle me-2"></i> Free shipping on orders over $50</p>
+                                    <p><i class="fas fa-check-circle me-2"></i> 30-day return policy</p>
+                                    <p><i class="fas fa-check-circle me-2"></i> Secure payment processing</p>
+                                    <p><i class="fas fa-check-circle me-2"></i> 24/7 customer support</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="auth-right">
+                                <div class="text-center mb-4">
+                                    <h2><i class="fas fa-tshirt text-primary"></i> FashionNova</h2>
+                                    <p class="text-muted">Sign in to your account or create a new one</p>
+                                </div>
+                                
+                                <div class="form-toggle text-center">
+                                    <button class="btn btn-primary me-2" id="showLogin">Login</button>
+                                    <button class="btn btn-outline-primary" id="showRegister">Register</button>
+                                </div>
+                                
+                                <!-- Login Form -->
+                                <form id="loginForm" class="auth-form active">
+                                    <div class="mb-3">
+                                        <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
+                                        <div class="error-message" id="loginEmailError"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                                        <div class="error-message" id="loginPasswordError"></div>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                                        <label class="form-check-label" for="rememberMe">Remember me</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-auth">Sign In</button>
+                                    <div class="text-center mt-3">
+                                        <a href="#" class="text-muted">Forgot password?</a>
+                                    </div>
+                                </form>
+                                
+                                <!-- Register Form -->
+                                <form id="registerForm" class="auth-form">
+                                    <div class="user-type-select">
+                                        <input type="radio" name="userType" id="customer" value="customer" checked>
+                                        <label for="customer">Customer</label>
+                                        <input type="radio" name="userType" id="seller" value="seller">
+                                        <label for="seller">Seller</label>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="firstName" placeholder="First Name" required>
+                                            <div class="error-message" id="firstNameError"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="lastName" placeholder="Last Name" required>
+                                            <div class="error-message" id="lastNameError"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <input type="email" class="form-control" id="registerEmail" placeholder="Email" required>
+                                    <div class="error-message" id="registerEmailError"></div>
+                                    
+                                    <input type="tel" class="form-control" id="phoneNumber" placeholder="Phone Number" required>
+                                    <div class="error-message" id="phoneError"></div>
+                                    
+                                    <input type="password" class="form-control" id="registerPassword" placeholder="Password" required>
+                                    <div class="error-message" id="registerPasswordError"></div>
+                                    
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
+                                    <div class="error-message" id="confirmPasswordError"></div>
+                                    
+                                    <!-- Seller Specific Fields -->
+                                    <div id="sellerFields" style="display: none;">
+                                        <input type="text" class="form-control" id="storeName" placeholder="Store Name">
+                                        <div class="error-message" id="storeNameError"></div>
+                                    </div>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="terms" required>
+                                        <label class="form-check-label" for="terms">
+                                            I agree to the <a href="#" class="text-primary">Terms & Conditions</a>
+                                        </label>
+                                        <div class="error-message" id="termsError"></div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-auth">Create Account</button>
+                                </form>
+                                
+                                <div class="text-center mt-4">
+                                    <p class="text-muted">By continuing, you agree to our Terms of Service and Privacy Policy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:8000/api';
+        
+        // Toggle between login and register forms
+        document.getElementById('showLogin').addEventListener('click', function() {
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('registerForm').classList.remove('active');
+            this.classList.add('btn-primary');
+            this.classList.remove('btn-outline-primary');
+            document.getElementById('showRegister').classList.remove('btn-primary');
+            document.getElementById('showRegister').classList.add('btn-outline-primary');
+        });
+        
+        document.getElementById('showRegister').addEventListener('click', function() {
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
+            this.classList.add('btn-primary');
+            this.classList.remove('btn-outline-primary');
+            document.getElementById('showLogin').classList.remove('btn-primary');
+            document.getElementById('showLogin').classList.add('btn-outline-primary');
+        });
+        
+        // Show/hide seller fields
+        document.querySelectorAll('input[name="userType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const sellerFields = document.getElementById('sellerFields');
+                sellerFields.style.display = (this.value === 'seller') ? 'block' : 'none';
+            });
+        });
+        
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        }
+        
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            if (element) element.textContent = message;
+        }
+        
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        function validatePassword(password) {
+            return password.length >= 8;
+        }
+        
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearErrors();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            let valid = true;
+            if (!validateEmail(email)) { showError('loginEmailError', 'Invalid email'); valid = false; }
+            if (!validatePassword(password)) { showError('loginPasswordError', 'Password min 8 chars'); valid = false; }
+            if (!valid) return;
+            const res = await fetch(`${API_BASE_URL}/auth/login/`, {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({email,password})
+            });
+            const data = await res.json();
+            if (res.ok) {
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                window.location.href = (data.user.user_type === 'seller') ? '/seller-dashboard/' : '/';
+            } else {
+                showError('loginPasswordError', data.detail || 'Invalid credentials');
+            }
+        });
+        
+        // Register form
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearErrors();
+            
+            const userType = document.querySelector('input[name="userType"]:checked').value;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const phone = document.getElementById('phoneNumber').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const storeName = document.getElementById('storeName').value.trim();
+            const terms = document.getElementById('terms').checked;
+            
+            let valid = true;
+            if (!firstName) { showError('firstNameError','First name required'); valid=false; }
+            if (!lastName) { showError('lastNameError','Last name required'); valid=false; }
+            if (!validateEmail(email)) { showError('registerEmailError','Invalid email'); valid=false; }
+            if (!phone.match(/^[0-9]{10}$/)) { showError('phoneError','10-digit phone required'); valid=false; }
+            if (!validatePassword(password)) { showError('registerPasswordError','Password min 8 chars'); valid=false; }
+            if (password !== confirmPassword) { showError('confirmPasswordError','Passwords do not match'); valid=false; }
+            if (userType==='seller' && !storeName) { showError('storeNameError','Store name required'); valid=false; }
+            if (!terms) { showError('termsError','Agree to terms'); valid=false; }
+            if (!valid) return;
+            
+            const userData = {first_name:firstName,last_name:lastName,email,phone_number:phone,password,user_type:userType};
+            if(userType==='seller') userData.store_name=storeName;
+            
+            const res = await fetch(`${API_BASE_URL}/auth/register/`,{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify(userData)
+            });
+            const data = await res.json();
+            if(res.ok){
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                window.location.href = (data.user.user_type === 'seller') ? '/seller-dashboard/' : '/';
+            } else {
+                if(data.email) showError('registerEmailError', data.email[0]);
+                if(data.phone_number) showError('phoneError', data.phone_number[0]);
+                if(data.password) showError('registerPasswordError', data.password[0]);
+            }
+        });
+        
+        window.addEventListener('load', function() {
+            const token = localStorage.getItem('authToken');
+            if(token) window.location.href='/';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FashionNova - Online Clothing Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Custom Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+        
+        .badge-count {
+            font-size: 0.7rem;
+            padding: 0.2em 0.5em;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 120px 0;
+            margin-top: -20px;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        /* Category Cards */
+        .category-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .category-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        /* Product Cards */
+        .product-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            margin-bottom: 30px;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .product-image {
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff4757;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .wishlist-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .product-card:hover .wishlist-btn {
+            opacity: 1;
+        }
+        
+        .wishlist-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .original-price {
+            font-size: 0.9rem;
+            text-decoration: line-through;
+            color: #6c757d;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 60px 0 20px;
+            margin-top: 80px;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        /* Quick Stats */
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+        .toast {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .product-image {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-tshirt"></i> FashionNova
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown">
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu" id="categoriesMenu"></ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products/">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/brands/">Brands</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">About</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center">
+                    <a href="/wishlist/" class="nav-link position-relative me-3">
+                        <i class="fas fa-heart"></i>
+                        <span class="badge bg-danger badge-count" id="wishlistCount">0</span>
+                    </a>
+                    
+                    <a href="/cart/" class="nav-link position-relative me-3">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="badge bg-primary badge-count" id="cartCount">0</span>
+                    </a>
+                    
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle fa-lg"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/profile/"><i class="fas fa-user me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item" href="/orders/"><i class="fas fa-box me-2"></i>My Orders</a></li>
+                            <li><a class="dropdown-item" href="/seller/dashboard/"><i class="fas fa-store me-2"></i>Seller Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">Discover Your Style</h1>
+                    <p class="hero-subtitle">Shop the latest fashion trends from top brands. Quality clothing at affordable prices with fast delivery.</p>
+                    <div class="d-flex gap-3">
+                        <a href="/products/" class="btn btn-light btn-lg px-5">Shop Now</a>
+                        <a href="/categories/" class="btn btn-outline-light btn-lg px-5">Browse Categories</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="position-relative" style="max-width: 500px; margin: 0 auto;">
+                        <div class="bg-white rounded-circle position-absolute" style="width: 300px; height: 300px; opacity: 0.1; top: 50px; left: 50px;"></div>
+                        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="Fashion Model" class="img-fluid rounded-3 shadow-lg" style="max-height: 400px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-tshirt"></i>
+                        </div>
+                        <h3 class="h4">5000+</h3>
+                        <p class="text-muted">Products Available</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h3 class="h4">200+</h3>
+                        <p class="text-muted">Brands & Sellers</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <h3 class="h4">24/7</h3>
+                        <p class="text-muted">Fast Delivery</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <h3 class="h4">10,000+</h3>
+                        <p class="text-muted">Happy Customers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold">Shop by Category</h2>
+                <a href="/categories/" class="btn btn-outline-primary">View All</a>
+            </div>
+            
+            <div class="row g-4" id="categoriesGrid">
+                <!-- Categories will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="py-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold">Featured Products</h2>
+                <a href="/products/" class="btn btn-outline-primary">View All Products</a>
+            </div>
+            
+            <div class="row g-4" id="featuredProducts">
+                <!-- Featured products will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Discount Products -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold">Hot Deals</h2>
+                <span class="badge bg-danger">Up to 70% OFF</span>
+            </div>
+            
+            <div class="row g-4" id="discountProducts">
+                <!-- Discount products will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h3 class="mb-3"><i class="fas fa-tshirt"></i> FashionNova</h3>
+                    <p>Your one-stop shop for fashionable clothing at affordable prices. Quality, style, and comfort combined.</p>
+                    <div class="social-links mt-4">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-pinterest fa-lg"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <div class="footer-links">
+                        <a href="/">Home</a>
+                        <a href="/products/">Products</a>
+                        <a href="/categories/">Categories</a>
+                        <a href="/brands/">Brands</a>
+                        <a href="/about/">About Us</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="mb-3">Customer Service</h5>
+                    <div class="footer-links">
+                        <a href="/contact/">Contact Us</a>
+                        <a href="/faq/">FAQ</a>
+                        <a href="/shipping/">Shipping Policy</a>
+                        <a href="/returns/">Returns & Refunds</a>
+                        <a href="/privacy/">Privacy Policy</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 mb-4">
+                    <h5 class="mb-3">Contact Info</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> 123 Fashion Street, Nairobi</p>
+                    <p><i class="fas fa-phone me-2"></i> +254 712 345 678</p>
+                    <p><i class="fas fa-envelope me-2"></i> info@fashionnova.com</p>
+                    <div class="input-group mt-3">
+                        <input type="email" class="form-control" placeholder="Your email">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4" style="border-color: #495057;">
+            
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 FashionNova. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:8000/api';
+        let authToken = localStorage.getItem('authToken');
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+        // Utility Functions
+        function getAuthHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            };
+        }
+
+        async function apiRequest(endpoint, options = {}) {
+            const url = `${API_BASE_URL}${endpoint}`;
+            const headers = getAuthHeaders();
+            
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: { ...headers, ...options.headers }
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    window.location.href = '/login/';
+                    return null;
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                return null;
+            }
+        }
+
+        async function updateHeaderCounts() {
+            if (authToken) {
+                try {
+                    const cartResponse = await apiRequest('/cart/my_cart/');
+                    const wishlistResponse = await apiRequest('/wishlist/');
+                    
+                    if (cartResponse && cartResponse.items) {
+                        document.getElementById('cartCount').textContent = cartResponse.items.length;
+                    }
+                    
+                    if (wishlistResponse) {
+                        document.getElementById('wishlistCount').textContent = wishlistResponse.length;
+                    }
+                } catch (error) {
+                    console.error('Error updating counts:', error);
+                }
+            }
+        }
+
+        async function loadCategories() {
+            try {
+                const categories = await apiRequest('/categories/');
+                const menu = document.getElementById('categoriesMenu');
+                const grid = document.getElementById('categoriesGrid');
+                
+                if (categories && categories.length > 0) {
+                    // Populate dropdown menu
+                    categories.forEach(category => {
+                        const menuItem = document.createElement('li');
+                        menuItem.innerHTML = `<a class="dropdown-item" href="/category/${category.id}/">${category.name}</a>`;
+                        menu.appendChild(menuItem);
+                    });
+                    
+                    // Populate categories grid (first 4 categories)
+                    const limitedCategories = categories.slice(0, 4);
+                    grid.innerHTML = '';
+                    
+                    limitedCategories.forEach(category => {
+                        const col = document.createElement('div');
+                        col.className = 'col-md-3 col-6';
+                        col.innerHTML = `
+                            <div class="category-card" onclick="window.location.href='/category/${category.id}/'">
+                                <div class="card-body text-center p-4">
+                                    <div class="mb-3">
+                                        <i class="fas fa-tshirt fa-3x text-primary"></i>
+                                    </div>
+                                    <h5 class="card-title">${category.name}</h5>
+                                    <p class="text-muted">Explore collection</p>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(col);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        async function loadFeaturedProducts() {
+            try {
+                const products = await apiRequest('/products/?is_featured=true&limit=4');
+                const container = document.getElementById('featuredProducts');
+                
+                if (products && products.results) {
+                    displayProducts(products.results, container);
+                }
+            } catch (error) {
+                console.error('Error loading featured products:', error);
+            }
+        }
+
+        async function loadDiscountProducts() {
+            try {
+                const products = await apiRequest('/products/?has_discount=true&limit=4');
+                const container = document.getElementById('discountProducts');
+                
+                if (products && products.results) {
+                    displayProducts(products.results, container);
+                }
+            } catch (error) {
+                console.error('Error loading discount products:', error);
+            }
+        }
+
+        function displayProducts(products, container) {
+            container.innerHTML = '';
+            
+            products.forEach(product => {
+                const mainImage = product.images?.[0]?.image || '';
+                const discountedPrice = product.discount_price || product.price;
+                const discountPercentage = product.discount_percentage || 0;
+                
+                const col = document.createElement('div');
+                col.className = 'col-lg-3 col-md-6';
+                col.innerHTML = `
+                    <div class="product-card">
+                        <div class="position-relative">
+                            <img src="${mainImage}" class="product-image w-100" alt="${product.name}">
+                            ${discountPercentage > 0 ? 
+                                `<span class="discount-badge">-${discountPercentage}%</span>` : ''
+                            }
+                            <button class="wishlist-btn" onclick="toggleWishlist(${product.id}, this)">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="card-body p-3">
+                            <h6 class="card-title mb-1">${product.name}</h6>
+                            <p class="text-muted small mb-2">${product.seller_name || 'Seller'}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="product-price">KSh ${discountedPrice}</span>
+                                    ${product.discount_price ? 
+                                        `<span class="original-price ms-2">KSh ${product.price}</span>` : ''
+                                    }
+                                </div>
+                                <div class="rating">
+                                    ${generateStarRating(product.average_rating || 0)}
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3" onclick="addToCart(${product.id})">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                // Make entire card clickable except buttons
+                const card = col.querySelector('.product-card');
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.wishlist-btn') && !e.target.closest('.btn-primary')) {
+                        window.location.href = `/product/${product.id}/`;
+                    }
+                });
+                
+                container.appendChild(col);
+            });
+        }
+
+        function generateStarRating(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            
+            for (let i = 1; i <= 5; i++) {
+                if (i <= fullStars) {
+                    stars += '<i class="fas fa-star text-warning small"></i>';
+                } else if (i === fullStars + 1 && hasHalfStar) {
+                    stars += '<i class="fas fa-star-half-alt text-warning small"></i>';
+                } else {
+                    stars += '<i class="far fa-star text-warning small"></i>';
+                }
+            }
+            return stars;
+        }
+
+        async function toggleWishlist(productId, button) {
+            if (!authToken) {
+                window.location.href = '/login/';
+                return;
+            }
+            
+            const icon = button.querySelector('i');
+            
+            try {
+                // Check if already in wishlist
+                const wishlist = await apiRequest('/wishlist/');
+                const existingItem = wishlist?.find(item => item.product === productId);
+                
+                if (existingItem) {
+                    // Remove from wishlist
+                    await apiRequest(`/wishlist/${existingItem.id}/`, { method: 'DELETE' });
+                    icon.className = 'far fa-heart';
+                    showToast('Removed from wishlist');
+                } else {
+                    // Add to wishlist
+                    await apiRequest('/wishlist/', {
+                        method: 'POST',
+                        body: JSON.stringify({ product: productId })
+                    });
+                    icon.className = 'fas fa-heart text-danger';
+                    showToast('Added to wishlist');
+                }
+                
+                updateHeaderCounts();
+            } catch (error) {
+                console.error('Error toggling wishlist:', error);
+                showToast('Error updating wishlist', 'danger');
+            }
+        }
+
+        async function addToCart(productId) {
+            if (!authToken) {
+                window.location.href = '/login/';
+                return;
+            }
+            
+            try {
+                await apiRequest('/cart/add_item/', {
+                    method: 'POST',
+                    body: JSON.stringify({ product: productId, quantity: 1 })
+                });
+                
+                showToast('Added to cart');
+                updateHeaderCounts();
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                showToast('Error adding to cart', 'danger');
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.querySelector('.toast-container');
+            const toastId = 'toast-' + Date.now();
+            
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+            toast.setAttribute('id', toastId);
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${type === 'success' ? '<i class="fas fa-check-circle me-2"></i>' : '<i class="fas fa-exclamation-circle me-2"></i>'}
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            window.location.href = '/login/';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!authToken) {
+                // Hide user dropdown if not logged in
+                const userDropdown = document.querySelector('.dropdown');
+                if (userDropdown) {
+                    userDropdown.innerHTML = '<a class="nav-link" href="/login/"><i class="fas fa-sign-in-alt me-1"></i>Login</a>';
+                }
+                
+                // Hide wishlist and cart counts
+                document.getElementById('wishlistCount').parentElement.style.display = 'none';
+                document.getElementById('cartCount').parentElement.style.display = 'none';
+            } else {
+                // Setup logout
+                document.getElementById('logoutBtn').addEventListener('click', logout);
+                
+                // Load counts
+                updateHeaderCounts();
+            }
+            
+            // Load data
+            loadCategories();
+            loadFeaturedProducts();
+            loadDiscountProducts();
+        });
+    </script>
+</body>
+</html>
